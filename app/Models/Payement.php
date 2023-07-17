@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Models;
+use App\Models\Sites;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Payement extends Model
+{
+    use HasFactory;
+    protected $fillable = [ "libelle", "description","site_id",];
+
+    public function getsite() 
+    {
+        return $this->belongsTo(Sites::class, 'site_id', 'id');
+    }
+}
