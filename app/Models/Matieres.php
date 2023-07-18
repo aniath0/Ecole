@@ -10,7 +10,7 @@ use App\Models\Sites;
 class Matieres extends Model
 {
     use HasFactory;
-    protected $fillable = [ "libelle", "description", "coefficient","notemax", "notesoumise","site_id" ];
+    protected $fillable = [ "libelle", "description", "coefficient","notemax", "notesoumise","site_id", "statut_id" ];
 
     public function getsite() 
     {

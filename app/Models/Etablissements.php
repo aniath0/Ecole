@@ -19,6 +19,7 @@ class Etablissements extends Model
         "anneecreation",
         "logo",
         "telephone",
+        "statut_id",
     ];
    
 

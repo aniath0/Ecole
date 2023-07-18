@@ -16,8 +16,10 @@ class Classes extends Model
         'effectif',
         'user_id',
         'site_id',
+        'statut_id',
+        
     ];
-
+    
     public function getuser() 
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
@@ -27,4 +29,5 @@ class Classes extends Model
     {
         return $this->belongsTo(Sites::class, 'site_id', 'id');
     }
+
 }

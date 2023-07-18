@@ -13,14 +13,19 @@ class ClassesController extends Controller
     public function index() {
         //On récupère tous les Post
         $classes = Classes::orderBy('id', 'desc')->get();
-
+        $classes = Sites::where('statut_id', 1)->get();
+        $classes = Classes::with('getsite')
+        ->whereHas('getsite', function ($query) {
+            $query->where('statut_id', 1);
+        })
+        ->get();
         // On transmet les classes à la vue
         return view("backend.tables.classes.index", compact("classes"));
     }
     
 
     public function create(){
-        $sites = Sites::all();
+        $sites = Sites::where('statut_id', 1)->get();
         $users = User::where('role_id', 4)->get();
         return view('backend.tables.classes.create', compact('users', 'sites'));
     }
@@ -36,6 +41,7 @@ class ClassesController extends Controller
       $classes->setAttribute("sigle", $request->sigle);
       $classes->setAttribute("libelle", $request->libelle);
       $classes->setAttribute("effectif", $request->effectif);
+      $classes->setAttribute("statut_id", 1);      
       $classes->setAttribute("user_id", $request->user_id);
       $classes->setAttribute("site_id", $request->site_id);
       $classes->setAttribute("created_at", new \DateTime()); 
@@ -77,9 +83,9 @@ class ClassesController extends Controller
 
         $classe = Classes::find($id);
         
-        
+        $classe->update(['statut_id' => 2]);
         // On les informations du $statut de la table "statuts"
-        $classe->delete();
+        
 
         // Redirection route "statuts.index"
         return redirect(route('classes.index'));

@@ -13,6 +13,13 @@ class HabilitationsController extends Controller
     {
         //On récupère toutes les habilitations
         $habilitations = Habilitations::orderBy('id', 'desc')->get();
+        $habilitations = Habilitations::where('statut_id', 1)->get();
+        $hailitations = Sites::where('statut_id', 1)->get();
+        $habilitations = Habilitations::with('getsite')
+        ->whereHas('getsite', function ($query) {
+            $query->where('statut_id', 1);
+        })
+        ->get();
 
     // On transmet les habilitations à la vue
         return view("backend.tables.habilitations.index", compact("habilitations"));
@@ -20,7 +27,7 @@ class HabilitationsController extends Controller
     }
 
     public function create() {
-        $sites = Sites::all();
+        $sites = Sites::where('statut_id', 1)->get();
         return view('backend.tables.habilitations.create', compact("sites"));
      }
 
@@ -39,6 +46,7 @@ class HabilitationsController extends Controller
         $habilitations->setAttribute("code", $request->code);
         $habilitations->setAttribute("description", $request->description);
         $habilitations->setAttribute("site_id", $request->site_id);
+        $habilitations->setAttribute("statut_id", 1); 
         $habilitations->setAttribute("created_at", new \DateTime()); 
         $habilitations->save();
         // 4. On retourne vers tous les habilitations : route("habilitations.index")
@@ -73,12 +81,12 @@ class HabilitationsController extends Controller
 
     public function destroy(Habilitations $habilitation) { 
 
-        Storage::delete($habilitation->libelle);
+        $habilitations = Habilitations::find($id);
 
-        // On les informations du $habilitations de la table "statuts"
-        $habilitation->delete();
+        
+        $habilitations->update(['statut_id' => 2]);
     
-        // Redirection route "statuts.index"
+      
         return redirect(route('habilitations.index'));
     }
 }

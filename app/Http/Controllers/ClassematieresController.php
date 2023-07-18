@@ -14,6 +14,12 @@ class ClassematieresController extends Controller
     public function index() {
         //On récupère tous les Post
         $classematieres = Classematieres::orderBy('id', 'desc')->get();
+        $classematieres = Classematieres::where('statut_id', 1)->get();
+        $classematieres = Classematieres::with('getsite')
+        ->whereHas('getsite', function ($query) {
+            $query->where('statut_id', 1);
+        })
+        ->get();
 
         // On transmet les classes à la vue
         return view("backend.tables.classematieres.index", compact("classematieres"));
@@ -23,7 +29,7 @@ class ClassematieresController extends Controller
     public function create(){
         
         $matieres = Matieres::all();
-        $sites = Sites::all();
+        $sites = Sites::where('statut_id', 1)->get();
         $classes = Classes::all();
         return view('backend.tables.classematieres.create', compact('matieres', 'classes', 'sites'));
     }
@@ -39,6 +45,7 @@ class ClassematieresController extends Controller
       $classematieres->setAttribute("matiere_id", $request->matiere_id);
       $classematieres->setAttribute("classe_id", $request->classe_id);
       $classematieres->setAttribute("site_id", $request->site_id);
+      $classematieres->setAttribute("statut_id", 1);
       $classematieres->setAttribute("created_at", new \DateTime()); 
       $classematieres->save();
       // 4. On retourne vers tous les statuts : route("statuts.index")
@@ -76,10 +83,9 @@ class ClassematieresController extends Controller
     public function destroy($id) { 
 
         $classematiere = Classematieres::find($id);
-        $classe = Classes::find($id);
        
-        // On les informations du $statut de la table "statuts"
-        $classematiere->delete();
+       
+        $classematiere->update(['statut_id' => 2]);
 
         // Redirection route "statuts.index"
         return redirect(route('classematieres.index'));

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Storage;
+
 
 use App\Models\Sites;
 use App\Models\Etablissements;
@@ -16,6 +16,8 @@ class SitesController extends Controller
     public function index() {
         //On récupère tous les Post
         $sites = Sites::orderBy('id', 'desc')->get();
+        $sites = Sites::where('statut_id', 1)->get();
+    
 
         // On transmet les sites à la vue
         return view("backend.tables.sites.index", compact("sites"));
@@ -39,6 +41,7 @@ class SitesController extends Controller
       $sites = new Sites();
       $sites->setAttribute("nom", $request->nom);
       $sites->setAttribute("users_id", $request->users_id);
+      $sites->setAttribute("statut_id", 1);
       $sites->setAttribute("etablissement_id", $request->etablissement_id);
       $sites->setAttribute("created_at", new \DateTime()); 
       $sites->save();
@@ -70,11 +73,9 @@ class SitesController extends Controller
 
     public function destroy($id)
     {
-        $etablissement = Sites::find($id);
+        $site = Sites::find($id);
 
-        Storage::delete($etablissement->nom);
-
-        $etablissement->delete();
+        $site->update(['statut_id' => 2]);
 
         return redirect()->route('sites.index');
     }

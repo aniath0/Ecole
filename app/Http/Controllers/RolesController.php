@@ -12,14 +12,18 @@ class RolesController extends Controller
     {
         //On récupère tous les statut
         $roles = Roles::orderBy('id', 'desc')->get();
-
+        $roles = Roles::with('getsite')
+        ->whereHas('getsite', function ($query) {
+            $query->where('statut_id', 1);
+        })
+        ->get();
     // On transmet les statut à la vue
         return view("backend.tables.roles.index", compact("roles"));
    
     }
 
     public function create() {
-        $sites = Sites::all();
+        $sites = Sites::where('statut_id', 1)->get();
         return view('backend.tables.roles.create', compact("sites"));
      }
 
@@ -36,6 +40,7 @@ class RolesController extends Controller
         $roles->setAttribute("libelle", $request->libelle);
         $roles->setAttribute("description", $request->description);
         $roles->setAttribute("site_id", $request->site_id);
+        $roles->setAttribute("statut_id", 1);
         $roles->setAttribute("created_at", new \DateTime()); 
         $roles->save();
         // 4. On retourne vers tous les roles : route("roles.index")
@@ -69,10 +74,10 @@ class RolesController extends Controller
 
     public function destroy(Roles $role) { 
 
-        Storage::delete($role->libelle);
+        $role = Roles::find($id);
+        
+        $role->update(['statut_id' => 2]);
 
-        // On les informations du $statut de la table "statuts"
-        $role->delete();
     
         // Redirection route "statuts.index"
         return redirect(route('roles.index'));

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Inscription extends Model
 {
     use HasFactory;
-    protected $fillable = [ "libelle", "description","site_id" ];
+    protected $fillable = [ "libelle", "description","site_id" ,"statut_id"];
 
 
     public function getsite() 

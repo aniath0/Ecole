@@ -44,8 +44,24 @@
 
                             <td class="text-center">
                                         <a class="btn bg-success text-white " href="{{ route('inscriptions.edit', $inscriptions) }}" title="Modifier un rôle"><i class="bi bi-pencil-square"></i></a>
+                                        <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal_{{ $inscriptions->id }}"><i class="bi bi-trash" title="Supprimer"></i></a>
 
-                                        <form method="POST" action="{{ route('inscriptions.destroy', $inscriptions) }}" style="display: inline;">
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal_{{ $inscriptions->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Confirmation de suppression</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Voulez-vous vraiment supprimer cet enregistrement ?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                            <form method="POST" action="{{ route('inscriptions.destroy', $inscriptions) }}" style="display: inline;">
                                             <!-- CSRF token -->
                                             @csrf
                                             @method("DELETE")
@@ -55,6 +71,12 @@
 
                                             
                                         </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                        
                             </td>
                         </tr>
                         @endforeach

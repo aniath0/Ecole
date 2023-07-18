@@ -9,7 +9,7 @@ use App\Models\Sites;
 class Habilitations extends Model
 {
     use HasFactory;
-    protected $fillable = [ "libelle","code", "description", "site_id" ];
+    protected $fillable = [ "libelle","code", "description", "site_id" ,"statut_id"];
 
     public function getsite() 
     {

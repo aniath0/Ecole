@@ -10,6 +10,7 @@ class EtablissementController extends Controller
     public function index()
     {
         $etablissements = Etablissements::orderBy('id', 'desc')->get();
+        $etablissements = Etablissements::where('statut_id', 1)->get();
         return view("backend.tables.etablissements.index", compact("etablissements"));
     }
 
@@ -42,6 +43,7 @@ class EtablissementController extends Controller
         $etablissement->setAttribute("nom", $request->nom);
         $etablissement->setAttribute("adresse", $request->adresse);
         $etablissement->setAttribute("sigle", $request->sigle);
+        $etablissement->setAttribute("statut_id", 1);
         $etablissement->setAttribute("anneecreation", $request->anneecreation);
         $etablissement->setAttribute("logo", $name_image);
         $etablissement->setAttribute("telephone", $request->telephone);
@@ -86,9 +88,9 @@ class EtablissementController extends Controller
     {
         $etablissement = Etablissements::find($id);
 
-        Storage::delete($etablissement->nom);
+    
 
-        $etablissement->delete();
+        $etablissement->update(['statut_id' => 2]);
 
         return redirect()->route('etablissements.index');
     }

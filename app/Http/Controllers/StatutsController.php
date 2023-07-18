@@ -11,6 +11,11 @@ class StatutsController extends Controller
     {
         //On récupère tous les STATUTS
         $statuts = Statuts:: orderBy('id', 'desc')->get();
+        $statuts = Statuts::with('getsite')
+        ->whereHas('getsite', function ($query) {
+            $query->where('statut_id', 1);
+        })
+        ->get();
 
     // On transmet les statuts à la vue
         return view("backend.tables.statuts.index", compact("statuts"));
@@ -18,7 +23,6 @@ class StatutsController extends Controller
     }
    
     public function create() {
-        $sites = Sites::all();
 
         return view('backend.tables.statuts.create', compact("sites"));
      }
@@ -36,6 +40,7 @@ class StatutsController extends Controller
       $statuts->setAttribute("libelle", $request->libelle);
       $statuts->setAttribute("description", $request->description);
       $statuts->setAttribute("site_id", $request->site_id);
+      $classes->setAttribute("statut_id", 1);
       $statuts->setAttribute("created_at", new \DateTime()); 
       $statuts->save();
       // 4. On retourne vers tous les statuts : route("statuts.index")

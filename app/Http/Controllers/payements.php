@@ -15,6 +15,13 @@ class payements extends Controller
     {
         //On récupère tous les statut
         $payements = Payement::orderBy('id', 'desc')->get();
+        $payements = Payement::where('statut_id', 1)->get();
+        $payements = Payement::with('getsite')
+        ->whereHas('getsite', function ($query) {
+            $query->where('statut_id', 1);
+        })
+        ->get();
+
 
     // On transmet les statut à la vue
         return view("backend.tables.payements.index", compact("payements"));
@@ -22,7 +29,7 @@ class payements extends Controller
     }
 
     public function create() {
-        $sites = Sites::all();
+        $sites = Sites::where('statut_id', 1)->get();
         return view('backend.tables.payements.create',compact("sites"));
      }
 
@@ -39,6 +46,7 @@ class payements extends Controller
         $payements->setAttribute("libelle", $request->libelle);
         $payements->setAttribute("description", $request->description);
         $payements->setAttribute("site_id", $request->site_id);
+        $payements->setAttribute("statut_id", 1);
         $payements->setAttribute("created_at", new \DateTime()); 
         $payements->save();
         // 4. On retourne vers tous les roles : route("roles.index")
@@ -72,10 +80,9 @@ class payements extends Controller
 
     public function destroy(Payement $payement) { 
 
-        Storage::delete($payement->libelle);
-
-        // On les informations du $statut de la table "statuts"
-        $payement->delete();
+        $payement = Payement::find($id);
+       
+        $payement->update(['statut_id' => 2]);
     
         // Redirection route "statuts.index"
         return redirect(route('payements.index'));

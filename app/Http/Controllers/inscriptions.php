@@ -14,6 +14,13 @@ class inscriptions extends Controller
     {
         //On récupère tous les statut
         $inscriptions = Inscription::orderBy('id', 'desc')->get();
+        $inscriptions = Inscription::where('statut_id', 1)->get();
+        
+        $inscriptions = Inscription::with('getsite')
+        ->whereHas('getsite', function ($query) {
+            $query->where('statut_id', 1);
+        })
+        ->get();
 
     // On transmet les statut à la vue
         return view("backend.tables.inscriptions.index", compact("inscriptions"));
@@ -21,7 +28,7 @@ class inscriptions extends Controller
     }
 
     public function create() {
-        $sites = Sites::all();
+        $sites = Sites::where('statut_id', 1)->get();
         return view('backend.tables.inscriptions.create', compact("sites"));
      }
 
@@ -38,6 +45,7 @@ class inscriptions extends Controller
         $inscriptions->setAttribute("libelle", $request->libelle);
         $inscriptions->setAttribute("description", $request->description);
         $inscriptions->setAttribute("site_id", $request->site_id);
+        $inscriptions->setAttribute("statut_id", 1); 
         $inscriptions->setAttribute("created_at", new \DateTime()); 
         $inscriptions->save();
         // 4. On retourne vers tous les roles : route("roles.index")
@@ -71,10 +79,10 @@ class inscriptions extends Controller
 
     public function destroy(Inscription $inscription) { 
 
-        Storage::delete($inscription->libelle);
+        $inscription = Inscription::find($i);
 
         // On les informations du $statut de la table "statuts"
-        $inscription->delete();
+        $inscription->update(['statut_id' => 2]);
     
         // Redirection route "statuts.index"
         return redirect(route('inscriptions.index'));

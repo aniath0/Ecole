@@ -17,6 +17,7 @@ class classematieres extends Model
         'matiere_id',
         'classe_id',
         'site_id',
+        'statut_id',
     ];
 
     public function getmatiere() 

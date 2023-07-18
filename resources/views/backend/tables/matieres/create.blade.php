@@ -45,12 +45,13 @@
                                     <option value="{{ $site->id }}"> {{ $site->nom }} </option>
                                 @endforeach
                             </select>
-                        </div>
+                        </div> 
 
-                        <div class="form-group col-4 ">
+                       
+                   
+                    <div class="form-group col-8 ">
                             <label for="description" class="fw-bold">Description<i class="text-danger">*</i></label>
                             <textarea name="description" id="description" class="form-control" rows="3" required></textarea>
-                        </div>
                     </div>
 
                     <div class="form-group col-sm-8 mt-3">
@@ -59,6 +60,7 @@
                     </div>
                 </form>
             </div>
+        </div>
         </div>
         
       </div>
